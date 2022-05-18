@@ -7,7 +7,7 @@
 
 header {
     height: 80px;
-    background-color: #444;
+    background-color: rgb(138, 138, 138);
     color: white;
     padding: 20px;
     display: flex;
@@ -23,7 +23,8 @@ main {
 
 .product-card {
     width: calc(20% - 40px);
-    border: 1px solid #444;
+    border: 1px solid rgb(138, 138, 138);
+    background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     padding: 10px;
     flex-direction: column;
@@ -32,8 +33,9 @@ main {
 }
 
 .product-card_img {
-    max-height: 200px;
+    height: 200px;
     margin-bottom: 20px;
+    background-color: #fff;
 }
 
 .product-card_img:hover {
@@ -41,29 +43,30 @@ main {
 }
 
 .product-card_title {
+    min-height: 47PX;
     text-align: center;
     font-size: 20px;
-    color: #444;
+    color: rgb(138, 138, 138);
 }
 
 .product-card_price {
     font-size: 16px;
-    color: firebrick
+    color: rgba(178, 34, 34, 0.6)
 }
 
 .product-card_btn {
-    background-color: firebrick;
+    background-color: rgba(178, 34, 34, 0.6);
     color: white;
     margin: 10px;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    border: 1px solid firebrick;
+    border: 1px solid rgba(178, 34, 34, 0.6);
 }
 
 .product-card_btn:hover {
     background-color: white;
-    color: firebrick;
+    color: rgba(178, 34, 34, 0.6);
     margin: 10px;
     padding: 10px 20px;
     border-radius: 5px;
@@ -75,19 +78,167 @@ main {
     line-height: 40px;
 }
 
+.cart:hover {
+    font-size: 14pt;
+}
+
 .popup {
-    display: none;
     position: fixed;
     height: 100vh;
     width: 100vw;
+    left: 50%;
+    top: 50%;
+    align-content: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    padding: 20px 0;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.popup_img {
+    position: fixed;
+    height: 100%;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     padding: 20px 0;
 }
 
-.popup_view {
-    display: flex;
+.cart_popup_wrapper {
+    position: relative;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    left: 50%;
+    top: 50%;
     align-content: center;
     justify-content: center;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.cart_popup {
+    height: 100%;
+    width: 50vw;
+    position: absolute;
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.93);
+    flex-direction: column;
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+
+}
+
+.cart_good {
+    height: 80px;
+    width: 80%;
+    border: 1px solid rgb(198, 198, 198);
+    margin: 0 auto;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart_good_img {
+    height: 100%;
+    margin-right: 10px;
+}
+
+.cart_good_text {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.cart_good_title {
+    color: rgb(138, 138, 138)
+}
+
+.cart_good_price {
+    color: forestgreen;
+    font-size: larger;
+}
+
+.cart_good_num {
+    display: flex;
+    align-items: center;
+}
+
+.cart_icon {
+    height: 30%;
+}
+
+.cart_good_num_text {
+    margin: 10px;
+    font-size: 20pt;
+    color: rgb(138, 138, 138)
+}
+
+.cart_sum_text {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: right;
+}
+
+.cart_sum_title {
+    color: rgb(138, 138, 138);
+    font-size: smaller;
+
+}
+
+.cart_sum_price {
+    color: forestgreen;
+    font-size: larger;
+
+}
+
+.cart_sum {
+    width: 80%;
+    padding-top: 20px;
+    color: rgb(138, 138, 138);
+    font-size: larger;
+    text-align: left;
+    margin: 0 auto;
+}
+
+.cart-button {
+    width: 20%;
+    height: 40px;
+    color: rgb(128 128 128);
+    border-radius: 5%;
+    padding: 10px 20px;
+    margin: 20px 10%;
+    border: 1px solid rgb(128 128 128);
+}
+
+.cart-button:hover {
+    background-color: #fff;
+}
+
+.cart-wrapper,
+.adress-wrapper,
+.comment-wrapper {
+    min-height: 100px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+textarea {
+    width: 80%;
+    padding: 12px 20px;
+    margin: 20px 10%;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    line-height: 150%;
 }
