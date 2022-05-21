@@ -68,20 +68,29 @@ function step() {
 
 }
 
-document.addEventListener('keydown', (e) => {
-  if (e.key == 'ArrowUp') {
-    direction = [0, -1];
-  }
-  if (e.key == 'ArrowDown') {
-    direction = [0, 1]
-  }
-  if (e.key == 'ArrowLeft') {
-    direction = [-1, 0];
-  }
-  if (e.key == 'ArrowRight') {
-    direction = [1, 0]
-  }
-})
+// document.addEventListener('keydown', (e) => {
+//   if (e.key == 'ArrowUp') {
+//     direction = [0, -1];
+//   }
+//   if (e.key == 'ArrowDown') {
+//     direction = [0, 1]
+//   }
+//   if (e.key == 'ArrowLeft') {
+//     direction = [-1, 0];
+//   }
+//   if (e.key == 'ArrowRight') {
+//     direction = [1, 0]
+//   }
+// })
+
+function Direction(keybtn) {
+
+}
+
+let goLeft = MakeDirection('ArrowLeft')
+
+
+
 
 gameInit();
 setInterval(step, 500);

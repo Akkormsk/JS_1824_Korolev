@@ -2,34 +2,40 @@ const mainEl = document.querySelector("main")
 const headEl = document.querySelector("header")
 
 const products = []
-const cart_list = []
+let cart_list = {}
 
-let goodId = 1
+class CartGood {
+    constructor(id, number) {
+        this.id = null;
+        this.number = 0;
+    }
+}
 
+let goodId = 0
 class Good {
-    constructor(name, price, img) {
+    constructor(name, price) {
         this.id = goodId++;
         this.name = name;
         this.price = price;
-        this.img = img;
+        this.img = null;
         this.number = 1;
     }
 }
 
 // ручное наполнение массива товаров
-
 products.push(
-    new Good("Летний коричневый костюм", 3500, "img/1/"),
-    new Good("Летний синий костюм", 3500, "img/2/"),
-    new Good("Летний зеленый костюм", 2500, "img/3/"),
-    new Good("Зимний коричневый костюм", 4500, "img/4/"),
-    new Good("Зимний черный костюм", 4500, "img/5/"),
-    new Good("Джемпер черный", 2500, "img/6/"),
-    new Good("Толстовка серая", 2500, "img/7/")
+    new Good("Летний коричневый костюм", 3500),
+    new Good("Летний синий костюм", 3500),
+    new Good("Летний зеленый костюм", 2500),
+    new Good("Зимний коричневый костюм", 4500),
+    new Good("Зимний черный костюм", 4500),
+    new Good("Джемпер черный", 2500),
+    new Good("Толстовка серая", 2500)
 )
 
-// отрисовка карточек 
 
+
+// отрисовка карточек 
 function drawCard(product) {
     const cardEl = document.createElement("DIV")
     const imgEl = document.createElement("IMG")
@@ -45,7 +51,7 @@ function drawCard(product) {
     btnEl.classList.add("product-card_btn")
     btnEl.setAttribute("data-id", product.id)
 
-    imgEl.setAttribute("src", product.img + "1-min.jpg")
+    imgEl.setAttribute("src", 'img/' + product.id + "/1-min.jpg")
     titleEl.textContent = product.name
     priceEl.textContent = product.price + " " + "RUB"
     btnEl.textContent = "Add to cart"
@@ -64,47 +70,53 @@ function drawProducts(products) {
 }
 
 // создание корзины
-
 const cartEl = document.createElement("DIV")
 cartEl.classList.add("cart")
 
-
-
 function reloadCart() {
-    cartEl.textContent = (cart_list.length > 0) ? `В корзине ${countBasketNum(cart_list)} поз. на сумму ${countBasketPrice(cart_list)} рублей` : "Корзина пуста"
-
-
+    cartEl.textContent = (Object.keys(cart_list).length > 0) ? `В корзине ${countBasketNum(cart_list)} поз. на сумму ${countBasketPrice(cart_list)} рублей` : "Корзина пуста"
 }
 
-reloadCart()
 headEl.append(cartEl)
 
 // функции корзины
 
 function addToCart(n) {
-    n--
-    if (cart_list.includes(products[n])) { products[n].number++ }
-    else { cart_list.push(products[n]) }
+    if (n in cart_list) { cart_list[n]++ }
+    else { cart_list[n] = 1 }
+    saveCart()
 }
 
 function delFromCart(n) {
-    n--
-    if (products[n].number > 1) { products[n].number-- }
+    if (cart_list[n] > 1) { cart_list[n]-- }
     else {
-        let index = cart_list.indexOf(products[n])
-        cart_list.splice(index, 1)
+        delete cart_list[n]
+        if (Object.keys(cart_list).length == 0) {
+            cartPopWrapEl.classList.toggle("hidden")
+        }
     }
+    saveCart()
 }
+
+function saveCart() {
+    window.localStorage.setItem('userCart', JSON.stringify(cart_list))
+}
+
+function loadCart() {
+    // localStorage.clear()
+    cart_list = JSON.parse(window.localStorage.getItem('userCart')) || {}
+}
+
 
 function countBasketNum(cart) {
     let num = 0
-    for (let good of cart) { num += good.number }
+    for (let n in cart) { num += cart_list[n] }
     return num
 }
 
 function countBasketPrice(cart) {
     let sum = 0
-    for (let good of cart) { sum += (good.price * good.number) }
+    for (let n in cart) { sum += (products[n].price * cart_list[n]) }
     return sum
 }
 
@@ -116,6 +128,7 @@ mainEl.addEventListener("click", function (e) {
         addToCart(e.target.dataset.id)
         reloadCart()
         drawCartList()
+        saveCart()
     }
 })
 
@@ -166,9 +179,13 @@ cartPopWrapEl.classList.add("hidden")
 mainEl.append(cartPopWrapEl)
 cartPopWrapEl.append(cartPopEl)
 
+loadCart()
+drawCartList()
+reloadCart()
+
 // открыть окно корзины
 cartEl.addEventListener("click", (e) => {
-    if (cart_list.length > 0) {
+    if (Object.keys(cart_list).length > 0) {
         cartPopWrapEl.classList.toggle("hidden")
     }
 
@@ -184,7 +201,7 @@ cartPopEl.addEventListener("click", (e) => {
 })
 
 // отрисовка товара в корзине
-function drawCartGood(good, cartWrapper) {
+function drawCartGood(n, cartWrapper) {
     const cartGoodEl = document.createElement("DIV")
     const cartGoodImgEl = document.createElement("IMG")
     const cartGoodTextEl = document.createElement("DIV")
@@ -232,26 +249,26 @@ function drawCartGood(good, cartWrapper) {
     cartGoodSumEl.append(cartGoodSumPriceEl)
 
 
-    cartGoodImgEl.setAttribute("src", "img/" + good.id + "/1-min.jpg")
-    cartGoodTitleEl.textContent = good.name
-    cartGoodPriceEl.textContent = good.price + " RUB"
+    cartGoodImgEl.setAttribute("src", "img/" + n + "/1-min.jpg")
+    cartGoodTitleEl.textContent = products[n].name
+    cartGoodPriceEl.textContent = products[n].price + " RUB"
     cartGoodNumMinusEl.setAttribute("src", "img/minus.svg")
-    cartGoodTotalEl.textContent = good.number
+    cartGoodTotalEl.textContent = cart_list[n]
     cartGoodNumPlusEl.setAttribute("src", "img/plus.svg")
 
     cartGoodSumTextEl.textContent = "Сумма:"
-    cartGoodSumPriceEl.textContent = good.price * good.number + " RUB"
+    cartGoodSumPriceEl.textContent = products[n].price * cart_list[n] + " RUB"
 
     //функция прибавления количества
     cartGoodNumPlusEl.addEventListener("click", (e) => {
-        addToCart(good.id)
+        addToCart(n)
         reloadCart()
         drawCartList()
     })
 
     //функция убавления количества
     cartGoodNumMinusEl.addEventListener("click", (e) => {
-        delFromCart(good.id)
+        delFromCart(n)
         reloadCart()
         drawCartList()
     })
@@ -264,13 +281,13 @@ function drawCartList() {
     // отрисовка блока с товарами
     const cartWrapper = document.createElement("DIV")
     cartWrapper.classList.add("cart-wrapper")
-    for (let good of cart_list) {
-        drawCartGood(good, cartWrapper)
+    for (let n in cart_list) {
+        drawCartGood(n, cartWrapper)
     }
     const cartSumEl = document.createElement("DIV")
     cartSumEl.classList.add("cart_sum")
     cartWrapper.append(cartSumEl)
-    cartSumEl.textContent = (cart_list.length > 0) ? `Сумма корзины: ${countBasketPrice(cart_list)} RUB` : "Корзина пуста"
+    cartSumEl.textContent = (Object.keys(cart_list).length > 0) ? `Сумма корзины: ${countBasketPrice(cart_list)} RUB` : "Корзина пуста"
     const cartButEl = document.createElement("BUTTON")
     cartButEl.classList.add("cart-button")
     cartButEl.textContent = "Далее"
